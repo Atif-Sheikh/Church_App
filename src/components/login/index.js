@@ -1,0 +1,127 @@
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, StatusBar, Button, Keyboard, BackHandler, TouchableHighlight, Dimensions, Platform } from 'react-native';
+import { Content, Input, Item, Thumbnail } from 'native-base';
+import { Actions } from 'react-native-router-flux'; // New code
+import LinearGradient from 'react-native-linear-gradient';
+import { Styles, screenHeight, screenWidth, fontScale } from "../../config";
+
+class Login extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            email: '',
+            password: '',
+            // loading: false,
+        };
+    };
+    
+    static navigationOptions = {
+        header: null
+    };
+
+    _focusNextField = (nextField) => {
+        this.refs[nextField]._root.focus();
+    };
+
+    renderFunc = () => {
+        // const { loader } = this.props;
+        // if (loader) {
+        //     return <Loader />
+        // } else {
+            return <TouchableOpacity style={styles.signinBtn} onPress={() => Actions.home()}><Text style={{ color: Styles.theme.buttonTextColor, fontSize: Styles.fonts.h3, fontFamily: Styles.fonts.BoldItalic }}>SIGN IN</Text></TouchableOpacity>
+        // };
+    };
+    
+    render() {
+
+        const title = '';
+        Platform.OS === 'android' && StatusBar.setBarStyle('light-content', true);
+        Platform.OS === 'android' && StatusBar.setBackgroundColor("#07AFB8");
+
+        return (
+            <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} colors={Styles.theme.gradients2} style={{ flex: 1, alignContent: 'center' }}>
+                <View style={styles.container}>
+                    <View>
+                        <TouchableOpacity>
+                            <View style={{ screenWidth: 64, screenHeight: 64, borderRadius: 32, borderscreenWidth: 5, borderColor: '#4A86C5', alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}>
+                                {/* <Thumbnail style={{ screenWidth: 58, screenHeight: 58 }} source={require('../images/appicon.png')} /> */}
+                            </View>
+                        </TouchableOpacity>
+                        <Text style={{ fontFamily: Styles.fonts.Bold, textAlign: "center", fontSize: Styles.fonts.h1, padding: 20 }}>
+                            Login
+                        </Text>
+                        <Item style={styles.item} regular>
+                            <Input textContentType='email'
+                                returnKeyType='next'
+                                placeholder='Email Address'
+                                placeholderTextColor="black"
+                                onChangeText={email => this.setState({ email })} style={styles.input}
+                                onSubmitEditing={() => this._focusNextField('pass')}
+                            />
+                        </Item>
+
+                        <Item style={styles.item} regular>
+                            <Input placeholder='**********'
+                                placeholderTextColor="black"
+                                onChangeText={password => this.setState({ password })}
+                                style={styles.input} secureTextEntry={true}
+                                ref="pass"
+                            />
+                        </Item>
+                        <Text style={{ fontSize: Styles.fonts.regular, color: 'red' }}>{this.props.error}</Text>
+                        <View style={styles.btn}>
+                            {this.renderFunc()}
+                        </View>
+                        <TouchableHighlight onPress={() => Actions.signup()}>
+                            <Text style={{ fontSize: Styles.fonts.regular, alignSelf: 'center', paddingVertical: 5, fontFamily: Styles.fonts.Normal }}>
+                                Don't have an Account ?
+                        </Text>
+                        </TouchableHighlight>
+                        <TouchableHighlight onPress={() => Actions.forgotScreen()}>
+                            <Text style={{ fontSize: Styles.fonts.regular, alignSelf: 'center', paddingVertical: 5, fontFamily: Styles.fonts.Normal }}>
+                                Forgot Password ?
+                        </Text>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+            </LinearGradient>
+        );
+    };
+};
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+        paddingBottom: 150
+    },
+    input: {
+        height: screenHeight / 14,
+        fontFamily: Styles.fonts.Normal,
+        color: Styles.theme.textColor
+    },
+    item: {
+        width: screenWidth / 1.3,
+        marginBottom: screenHeight / 20,
+        borderColor: Styles.theme.inputBorderColor,
+        borderWidth: 1,
+        borderRadius: 5,
+    },
+    signinBtn: {
+        height: "80%",
+        width: "100%",
+        backgroundColor: Styles.theme.buttonBackgroundColor,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 5
+    },
+    btn: {
+        width: screenWidth / 1.3,
+        height: screenHeight / 12,
+        alignSelf: 'center',
+        borderRadius: 5
+    },
+});
+
+export default Login;
