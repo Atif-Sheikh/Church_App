@@ -4,6 +4,10 @@ import { Actions } from 'react-native-router-flux'; // New code
 import { Content, Input, Item, CheckBox, Body, Picker, Icon, Container } from 'native-base';
 import { screenHeight, screenWidth, Styles } from "../../config";
 import LinearGradient from 'react-native-linear-gradient';
+import { connect } from 'react-redux';
+
+import Loader from '../loader';
+import { AuthAction } from '../../store/actions';
 
 class Signup extends Component {
     constructor(props) {
@@ -15,15 +19,28 @@ class Signup extends Component {
             number: '',
         };
     };
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.user) {
+            Actions.home();
+        };
+    };
+    
     static navigationOptions = {
         header: null
     };
+    
     renderFunc = () => {
-        return (
-            <TouchableOpacity onPress={this.signup} style={{ backgroundColor: Styles.theme.buttonBackgroundColor, height: screenHeight / 14, width: "100%", justifyContent: "center", alignItems: "center", borderRadius: 5 }}>
-                <Text style={{ fontFamily: Styles.fonts.BoldItalic, color: Styles.theme.buttonTextColor, fontSize: Styles.fonts.h2 }}>Sign Up</Text>
-            </TouchableOpacity>
-        )
+        const { loader } = this.props;
+        if (loader) {
+            return <Loader />;
+        } else {
+            return (
+                <TouchableOpacity onPress={this.signup} style={{ backgroundColor: Styles.theme.buttonBackgroundColor, height: screenHeight / 14, width: "100%", justifyContent: "center", alignItems: "center", borderRadius: 5 }}>
+                    <Text style={{ fontFamily: Styles.fonts.BoldItalic, color: Styles.theme.buttonTextColor, fontSize: Styles.fonts.h2 }}>Sign Up</Text>
+                </TouchableOpacity>
+            )
+        };
     };
 
     onValueChange = (value) => {
@@ -33,7 +50,21 @@ class Signup extends Component {
     };
     
     signup = () => {
-        Alert.alert(null, 'Please enter all fields correctly');
+        const { email, password, userName, number, studentClass, accountType } = this.state;
+        if (email.trim() && password.trim() && userName.trim() && number.trim()) {
+            const obj = {
+                userName,
+                email,
+                password,
+                number,
+            };
+
+            this.props.Signup(obj);
+            Keyboard.dismiss();
+
+        } else {
+            Alert.alert(null, 'Please enter all fields correctly');
+        }
     };
 
     _focusNextField = (nextField) => {
@@ -53,7 +84,7 @@ class Signup extends Component {
                             <Input placeholder='Your name' onSubmitEditing={() => this._focusNextField('email')} returnKeyType={"next"} style={styles.input} onChangeText={name => this.setState({ userName: name.trim() })} />
                         </Item>
                         <Item style={styles.item} regular>
-                            <Input ref='email' returnKeyType='next' onSubmitEditing={() => this._focusNextField('pass')} placeholder='Email Address' style={styles.input} onChangeText={email => this.setState({ email: email.trim() })} />
+                            <Input ref='email' textContentType='emailAddress' returnKeyType='next' onSubmitEditing={() => this._focusNextField('pass')} placeholder='Email Address' style={styles.input} onChangeText={email => this.setState({ email: email.trim() })} />
                         </Item>
                         <Item style={styles.item} regular>
                             <Input ref='pass' returnKeyType='next' onSubmitEditing={() => this._focusNextField('contact')} placeholder='************' style={styles.input} secureTextEntry={true} onChangeText={password => this.setState({ password: password.trim() })} />
@@ -62,7 +93,7 @@ class Signup extends Component {
                             <Input ref='contact' placeholder='+923********' style={styles.input} keyboardType='numeric' onChangeText={(text) => this.setState({ number: text.trim() })} />
                         </Item>
                         {this.renderFunc()}
-                        <TouchableOpacity onPress={() => Actions.login({ from: "signup" })} style={{ alignSelf: "center" }}>
+                        <TouchableOpacity onPress={() => this.signup()} style={{ alignSelf: "center" }}>
                             <Text style={{ fontFamily: Styles.fonts.Italic, paddingTop: 5 }}>
                                 Already have an account ?
                         </Text>
@@ -118,4 +149,19 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Signup;
+function mapStateToProp(state) {
+    return ({
+        user: state.AuthReducer.user,
+        isError: state.AuthReducer.isError,
+        loader: state.AuthReducer.signupLoader,
+    });
+};
+function mapDispatchToProp(dispatch) {
+    return {
+        Signup: (payload) => {
+            dispatch(AuthAction.signup(payload))
+        },
+    };
+};
+
+export default connect(mapStateToProp, mapDispatchToProp)(Signup);

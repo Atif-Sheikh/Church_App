@@ -3,6 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, StatusBar, Button, Key
 import { Content, Input, Item, Thumbnail } from 'native-base';
 import { Actions } from 'react-native-router-flux'; // New code
 import LinearGradient from 'react-native-linear-gradient';
+import { connect } from 'react-redux';
+
+import Loader from '../loader';
+
+import { AuthAction } from '../../store/actions';
+
 import { Styles, screenHeight, screenWidth, fontScale } from "../../config";
 
 class Login extends Component {
@@ -19,17 +25,71 @@ class Login extends Component {
         header: null
     };
 
+    UNSAFE_componentWillMount() {
+        if (this.props.from && this.props.from === "signup") {
+            console.log("coming from signup")
+        }
+        else {
+            this.props.checkUser();
+        }
+        BackHandler.addEventListener("hardwareBackPress", this._handlePress)
+    };
+
+    _onPressOkay = () => {
+        BackHandler.exitApp();
+    };
+
+    _handlePress = () => {
+        if (Actions.currentScene === "login") {
+            Alert.alert(
+                'Exit App',
+                'Exiting the application?',
+                [
+                    { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                    { text: 'OK', onPress: () => { this._onPressOkay() } },
+                ],
+                { cancelable: true }
+            )
+        } else {
+            Actions.pop();
+        }
+        return true;
+    };
+
     _focusNextField = (nextField) => {
         this.refs[nextField]._root.focus();
     };
+    
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps && nextProps.authed) {
+            Actions.home();
+        }
+    };
+
+    login = () => {
+        const { email, password } = this.state;
+        // Actions.home();
+        if (email, password) {
+            // this.setState({loading: true});
+            const user = {
+                email: this.state.email.trim(),
+                password: this.state.password.trim(),
+            };
+            this.props.signin(user);
+            Keyboard.dismiss();
+
+        } else {
+            Alert.alert(null, 'Please enter all fields!');
+        }
+    };
 
     renderFunc = () => {
-        // const { loader } = this.props;
-        // if (loader) {
-        //     return <Loader />
-        // } else {
-            return <TouchableOpacity style={styles.signinBtn} onPress={() => Actions.home()}><Text style={{ color: Styles.theme.buttonTextColor, fontSize: Styles.fonts.h3, fontFamily: Styles.fonts.BoldItalic }}>SIGN IN</Text></TouchableOpacity>
-        // };
+        const { loader } = this.props;
+        if (loader) {
+            return <Loader />
+        } else {
+            return <TouchableOpacity style={styles.signinBtn} onPress={this.login}><Text style={{ color: Styles.theme.buttonTextColor, fontSize: Styles.fonts.h3, fontFamily: Styles.fonts.BoldItalic }}>SIGN IN</Text></TouchableOpacity>
+        };
     };
     
     render() {
@@ -51,7 +111,7 @@ class Login extends Component {
                             Login
                         </Text>
                         <Item style={styles.item} regular>
-                            <Input textContentType='email'
+                            <Input textContentType='emailAddress'
                                 returnKeyType='next'
                                 placeholder='Email Address'
                                 placeholderTextColor="black"
@@ -124,4 +184,25 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Login;
+function mapStateToProps(state) {
+    console.warn(state, ">>>>>>>>>>>>>>>>")
+    return ({
+        user: state.AuthReducer.user,
+        isAuth: state.AuthReducer.isAuthenticated,
+        isError: state.AuthReducer.isError,
+        loader: state.AuthReducer.signInLoading,
+        checkLoader: state.AuthReducer.checkUserLoader,
+        authed: state.AuthReducer.checkUser,
+    });
+};
+function mapDispatchToProps(dispatch) {
+    return {
+        checkUser: () => {
+            dispatch(AuthAction.CheckUser())
+        },
+        signin: (payload) => {
+            dispatch(AuthAction.signin(payload))
+        }
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
