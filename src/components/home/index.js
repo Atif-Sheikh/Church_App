@@ -133,7 +133,7 @@ class Home extends Component {
                                 // ListFooterComponent={this.renderFooter}  
                                 /> */}
                                 <Fab
-                                    onPress={() => Actions.login()}
+                                    onPress={() => Actions.post()}
                                     active={false}
                                     style={{ backgroundColor: Styles.theme.backgroundColor, position: "absolute", marginBottom: 20 }}
                                 >

@@ -34,7 +34,7 @@ export default class Epic {
                                 console.log(data, "yed khoo")
                                 return Observable.of({
                                     type: AuthAction.SIGNIN_SUCCESS,
-                                    payload: data._value
+                                    payload: data
                                 })
                             })
                             
@@ -159,5 +159,37 @@ export default class Epic {
                 }
             })
     };
+
+    static PostData = (action$) => {
+        return action$.ofType(AuthAction.POST_DATA)
+            .switchMap(({ payload }) => {
+                console.log(payload , "HUhahah")
+                return Observable.fromPromise(
+                    FirebaseService.uploadPhoto(payload.photo)
+                ).switchMap((uri) => {
+                    payload['photo'] = uri;
+                    return Observable.fromPromise(
+                        FirebaseService.pushOnDatabase(`status`, payload)
+                    ).map(() => {
+                        Alert.alert(null, 'SuccessFully Posted', [{ text: 'OK', onPress: () => console.log("closed") }]);
+                        return {
+                            type: AuthAction.POST_DATA_SUCCESS
+                        }
+                    })
+                }).catch((err) => {
+                    alert(error)
+
+                })
+            }).catch((error) => {
+                alert(error)
+
+                return Observable.of({
+                    type: AuthAction.POST_DATA_FAIL,
+                    payload: error
+                })
+            })
+
+    }
+
 
 };

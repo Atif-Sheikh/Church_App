@@ -5,7 +5,8 @@ import {
     Signup,
     ForgotPass,
     Home,
-    Splash
+    Splash,
+    Post
 } from "./components";
 
 export default class Routes extends Component {
@@ -16,7 +17,6 @@ export default class Routes extends Component {
                     <Scene
                         key='loading'
                         component={Splash}
-                        initial
 
                     />
                     <Scene
@@ -39,6 +39,12 @@ export default class Routes extends Component {
                         key='home'
                         component={Home}
                         title='Home'
+
+                    />
+                    <Scene
+                        key='post'
+                        component={Post}
+                        title='Post'
 
                     />
                 </Scene>

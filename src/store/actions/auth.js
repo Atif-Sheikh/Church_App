@@ -15,6 +15,10 @@ export default class AuthAction {
     static CHECK_USER = 'CHECK_USER';
     static CHECK_USER_SUCCESS = 'CHECK_USER_SUCCESS';
     static CHECK_USER_FAILED = 'CHECK_USER_FAILED';
+    
+    static POST_DATA = 'POST_DATA';
+    static POST_DATA_SUCCESS = 'POST_DATA_SUCCESS';
+    static POST_DATA_FAILED = 'POST_DATA_FAILED';
 
     static signin(payload) {
         console.log(payload);
@@ -39,6 +43,13 @@ export default class AuthAction {
     static CheckUser(){
         return {
             type: AuthAction.CHECK_USER,
+        }
+    }
+
+    static postData(data) {
+        return {
+            type: AuthAction.POST_DATA,
+            payload: data
         }
     }
 }

@@ -25,7 +25,7 @@ export default class FirebaseService {
         })
     }
     static getUser(){
-        return auth().onAuthStateChanged(({ user }) => {
+        return auth().onAuthStateChanged((user) => {
             console.log(user, "nh hai")
             if(user){
                 database().ref(`/users/${user.uid}`).once('value', snapshot => {
@@ -33,7 +33,7 @@ export default class FirebaseService {
                     store.dispatch({ type: AuthAction.CHECK_USER_SUCCESS, payload: snapshot.val() })
                 }).then(() => {
                     // alert("yes")
-                    Actions.popAndPush('home');
+                    Actions.push('home');
                 })
             } else if(Actions.currentScene === "loading") {
                 console.log("E;se")
@@ -83,20 +83,41 @@ export default class FirebaseService {
     static logoutuser() {
         return auth().signOut()
     }
-    // static uploadPhoto(uri) {
-    //     if (uri) {
 
-    //         const storage = firebase.storage();
-    //         const sessionId = new Date().getTime();
-    //         const imageRef = storage.ref(`images/${sessionId}`);
-    //         return imageRef.putFile(uri).then(() => {
-    //             return imageRef.getDownloadURL()
-
-    //         })
-    //     }
-    //     else {
-    //         return Promise.resolve()
-    //     }
-
-    // }
+    static uploadPhoto(uri) {
+        if (uri) {
+            console.log(uri, "URIIIII")
+            return new Promise((res, rej) => {
+               
+                let formdata = new FormData();
+                formdata.append('file', uri);
+                formdata.append('cloud_name', 'atif786');
+                formdata.append('upload_preset', 'e7bxdahf');
+                formdata.append('api_key', '628766992677356');
+        
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', "https://api.cloudinary.com/v1_1/cloud_name/image/upload", true);
+        
+                xhr.onload = function () {
+                    // do something to response
+                    if (xhr.status === 200) {
+                        var url = JSON.parse(xhr.responseText);
+                        console.log(url.uri, "Ye mil gya")
+                        res(url.url);
+                    }
+                }.bind(this);
+                xhr.send(formdata);
+    
+    
+                // const storage = firebase.storage();
+                // const sessionId = new Date().getTime();
+                // const imageRef = storage.ref(`images/${sessionId}`);
+                // return imageRef.putFile(uri).then(() => {
+                //     return imageRef.getDownloadURL()
+    
+                // })
+            
+            });
+        }
+    }
 }
