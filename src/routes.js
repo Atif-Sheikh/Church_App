@@ -4,7 +4,8 @@ import {
     Login,
     Signup,
     ForgotPass,
-    Home
+    Home,
+    Splash
 } from "./components";
 
 export default class Routes extends Component {
@@ -13,9 +14,14 @@ export default class Routes extends Component {
             <Router>
                 <Scene key="root">
                     <Scene
+                        key='loading'
+                        component={Splash}
+                        initial
+
+                    />
+                    <Scene
                         key='login'
                         component={Login}
-                        initial
 
                     />
                     <Scene

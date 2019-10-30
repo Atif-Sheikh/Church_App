@@ -11,7 +11,8 @@ import { AuthEpic } from './epic/index'
 const rootEpic = combineEpics(
     AuthEpic.SignupEpic,
     AuthEpic.SigninEpic,
-    AuthEpic.Logout
+    AuthEpic.Logout,
+    AuthEpic.CheckUser
 );
 
 const rootReducer = combineReducers({

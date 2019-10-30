@@ -21,7 +21,6 @@ export default class Epic {
                 return Observable.fromPromise(
                     FirebaseService.signin(payload.email, payload.password)
                 ).switchMap(({ user }) => {
-                    alert(user.uid)
                     return Observable.fromPromise(
                         FirebaseService.getToken()
                     ).switchMap((token) => {

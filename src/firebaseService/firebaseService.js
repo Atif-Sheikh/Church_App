@@ -26,20 +26,22 @@ export default class FirebaseService {
     }
     static getUser(){
         return auth().onAuthStateChanged(({ user }) => {
-            if(Actions.currentScene === "login"){
-                if(user){
-                    database().ref(`/users/${user.uid}`).once('value', snapshot => {
-                        console.warn(snapshot.val());
-                        store.dispatch({ type: AuthAction.CHECK_USER_SUCCESS, payload: snapshot.val() })
-                    }).then(() => {
-                        // alert("yes")
-                        Actions.reset('home');
-                    })
-                }else{
-                    store.dispatch({ type: AuthAction.CHECK_USER_FAILED })
-                }
+            console.log(user, "nh hai")
+            if(user){
+                database().ref(`/users/${user.uid}`).once('value', snapshot => {
+                    console.warn(snapshot.val());
+                    store.dispatch({ type: AuthAction.CHECK_USER_SUCCESS, payload: snapshot.val() })
+                }).then(() => {
+                    // alert("yes")
+                    Actions.popAndPush('home');
+                })
+            } else if(Actions.currentScene === "loading") {
+                console.log("E;se")
+                // Actions.popAndPush('login');
+                Actions.push('login')
+                store.dispatch({ type: AuthAction.CHECK_USER_FAILED })
             }
-            })
+        });
     }
     static signin(email, password) {
         return auth().signInWithEmailAndPassword(email, password)
