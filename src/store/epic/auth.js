@@ -4,13 +4,14 @@ import FirebaseService from '../../firebaseService/firebaseService'
 import { firebase } from '@react-native-firebase/database';
 import { Actions } from 'react-native-router-flux';
 
+import 'rxjs/operators/map';
 
 import 'rxjs';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/fromPromise';
-
+import { map } from 'rxjs/operators/map';
 
 export default class Epic {
     static SigninEpic = (action$) => {
@@ -19,8 +20,8 @@ export default class Epic {
                 console.log(payload)
                 return Observable.fromPromise(
                     FirebaseService.signin(payload.email, payload.password)
-                ).switchMap((user) => {
-                    console.log(user)
+                ).switchMap(({ user }) => {
+                    alert(user.uid)
                     return Observable.fromPromise(
                         FirebaseService.getToken()
                     ).switchMap((token) => {
@@ -28,15 +29,22 @@ export default class Epic {
                             FirebaseService.updateOnDatabase(`/users/${user.uid}`, { deviceToken: token })
                         ).switchMap(() => {
                             return Observable.fromPromise(
-                                FirebaseService.getOnceFromDatabase(`users/${user.uid}`)
-                            ).map((data) => {
-                                // alert(data._value);
-                                console.log(data._value)
-                                data._value.password = payload.password
-                                return {
+                                FirebaseService.getOnceFromDatabase(`/users/${user.uid}`)
+                            ).switchMap((data) => {
+                                    // alert(data._value);
+                                console.log(data, "yed khoo")
+                                return Observable.of({
                                     type: AuthAction.SIGNIN_SUCCESS,
                                     payload: data._value
-                                }
+                                })
+                            })
+                            
+                        }).catch((err) => {
+                            alert(err)
+                            console.log(err, "Err")
+                            return Observable.of({
+                                type: AuthAction.SIGNIN_FAIL,
+                                payload: err
                             })
                         })
                     })
@@ -77,14 +85,14 @@ export default class Epic {
                             payload.deviceToken = token;
                             payload.Uid = user.uid;
                             delete payload['password'];
-                            Actions.home();
                             return Observable.fromPromise(
                                 FirebaseService.setOnDatabase(`users/${user.uid}/`, payload)
-                            ).map(() => {
-                                return {
+                            ).switchMap(() => {
+                                Actions.home();
+                                return Observable.of({
                                     type: AuthAction.SIGNUP_SUCCESS,
                                     payload
-                                }
+                                })
                             })
                         })
                     })

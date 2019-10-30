@@ -61,7 +61,7 @@ class Login extends Component {
     };
     
     UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps && nextProps.authed) {
+        if (nextProps && nextProps.isAuth) {
             Actions.home();
         }
     };

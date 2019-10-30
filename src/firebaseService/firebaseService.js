@@ -51,13 +51,23 @@ export default class FirebaseService {
         return auth().currentUser.updateProfile(payload)
     }
     static setOnDatabase(ref, payload) {
-        return database().ref(ref).set(payload)
+        return new Promise((res, rej) => {
+            return database().ref(ref).set(payload, (() => {
+                res();
+            }));
+        })
     }
     static pushOnDatabase(ref, payload) {
         return database().ref(ref).push(payload)
     }
     static getOnceFromDatabase(ref) {
-        return database().ref(ref).once("value", (snapshot) => snapshot)
+        console.log(ref, "REF")
+        return new Promise((res, rej) => {
+            return database().ref(ref).once("value", (snapshot) => {
+                console.log(snapshot.val(), ">Ye rha");
+                res(snapshot.val());
+            })
+        })
     }
     static updateOnDatabase(ref, payload) {
         return database().ref(ref).update(payload)
