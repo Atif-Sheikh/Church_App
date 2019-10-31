@@ -17,7 +17,6 @@ export default class Epic {
     static SigninEpic = (action$) => {
         return action$.ofType(AuthAction.SIGNIN)
             .switchMap(({ payload }) => {
-                console.log(payload)
                 return Observable.fromPromise(
                     FirebaseService.signin(payload.email, payload.password)
                 ).switchMap(({ user }) => {
@@ -30,9 +29,6 @@ export default class Epic {
                             return Observable.fromPromise(
                                 FirebaseService.getOnceFromDatabase(`/users/${user.uid}`)
                             ).switchMap((data) => {
-                                Actions.home();
-                                    // alert(data._value);
-                                console.log(data, "yed khoo")
                                 return Observable.of({
                                     type: AuthAction.SIGNIN_SUCCESS,
                                     payload: data
@@ -41,7 +37,6 @@ export default class Epic {
                             
                         }).catch((err) => {
                             alert(err)
-                            console.log(err, "Err")
                             return Observable.of({
                                 type: AuthAction.SIGNIN_FAIL,
                                 payload: err
@@ -66,14 +61,12 @@ export default class Epic {
             })
     };
     static SignupEpic = (action$) => {
-        console.log("ye chala")
         return action$.ofType(AuthAction.SIGNUP)
             .switchMap(({ payload }) => {
                 console.log(payload, "ye bh chala")
                 return Observable.fromPromise(
                     FirebaseService.signup(payload.email, payload.password)
                 ).switchMap(({ user }) => {
-                    console.log(user, "ye")
                     return Observable.fromPromise(
                         FirebaseService.getToken()
                     ).switchMap((token) => {
@@ -102,7 +95,6 @@ export default class Epic {
                     //     })
 
                 }).catch((err) => {
-                    console.warn(err)
                     return Observable.of({
                         type: AuthAction.SIGNUP_FAIL,
                         payload: err
@@ -163,7 +155,6 @@ export default class Epic {
     static PostData = (action$) => {
         return action$.ofType(AuthAction.POST_DATA)
             .switchMap(({ payload }) => {
-                console.log(payload , "HUhahah")
                 return Observable.fromPromise(
                     FirebaseService.uploadPhoto(payload.photo)
                 ).switchMap((uri) => {
@@ -185,6 +176,31 @@ export default class Epic {
 
                 return Observable.of({
                     type: AuthAction.POST_DATA_FAIL,
+                    payload: error
+                })
+            })
+
+    }
+
+
+    static GetPosts = (action$) => {
+        return action$.ofType(AuthAction.GET_DATA)
+            .switchMap(({ payload }) => {
+                return Observable.fromPromise(
+                    FirebaseService.listenOnDatabase("status")
+                ).switchMap(({_snapshot: { value }}) => {
+                    console.log(value, "DAta")
+                    return Observable.of({
+                        type: AuthAction.GET_DATA_SUCCESS,
+                        payload: value
+                    })
+                })
+
+            }).catch((error) => {
+                alert(error)
+
+                return Observable.of({
+                    type: AuthAction.GET_DATA_FAIL,
                     payload: error
                 })
             })

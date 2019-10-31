@@ -15,25 +15,30 @@ const INITIAL_STATE = {
     signupLoader: null,
     loader: false,
     checkUserLoader: null,
-    checkUser: null
+    checkUser: null,
 
+
+    postsLoader: false,
+    posts: null,
+    error: null
 };
 export default function AuthReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
         case AuthAction.CHECK_USER:
-            console.log(action.payload);
+            
             return Object.assign({}, state, { checkUserLoader: true, checkUser: null });
         case AuthAction.CHECK_USER_SUCCESS:
-            console.log(action.payload);
+            
             return Object.assign({}, state, { checkUserLoader: false, user: action.payload, isAuthenticated: true, checkUser: true });
         case AuthAction.CHECK_USER_FAILED:
-            console.log(action.payload);
+            
             return Object.assign({}, state, { checkUserLoader: false, isAuthenticated: false, checkUser: null });
 
         case AuthAction.SIGNIN:
-            return Object.assign({}, state, { isAuthenticated: false, user: null, isError: false, signInLoading: true });
+            return Object.assign({}, state, { isAuthenticated: false, isError: false, signInLoading: true });
+    
         case AuthAction.SIGNIN_SUCCESS:
-            console.log(state.user, action.payload);
+
             return Object.assign({}, state, { isAuthenticated: true, user: action.payload, signInLoading: false });
         case AuthAction.SIGNIN_FAIL:
             return Object.assign({}, state, { isError: true, signInLoading: false })
@@ -51,6 +56,15 @@ export default function AuthReducer(state = INITIAL_STATE, action) {
             return Object.assign({}, state, { loader: false, logout: null, user: null });
         case AuthAction.LOGOUT_FAILED:
             return Object.assign({}, state, { logout: false, loader: false });
+
+
+
+        case AuthAction.GET_DATA:
+            return Object.assign({}, state, { postsLoader: true });
+        case AuthAction.GET_DATA_SUCCESS:
+            return Object.assign({}, state, { posts: action.payload, postsLoader: false });
+        case AuthAction.GET_DATA_FAIL:
+            return Object.assign({}, state, { error: action.payload, postsLoader: false });
 
         default:
             return state;

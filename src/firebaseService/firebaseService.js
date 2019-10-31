@@ -14,6 +14,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/fromPromise';
 
 
+var authCheck = true;
 export default class FirebaseService {
 
     static getToken(){
@@ -26,14 +27,18 @@ export default class FirebaseService {
     }
     static getUser(){
         return auth().onAuthStateChanged((user) => {
-            console.log(user, "nh hai")
+            console.log(user, "ye dekhhhhhhhhhhhhhhhhhhhhhhhhh")
             if(user){
                 database().ref(`/users/${user.uid}`).once('value', snapshot => {
                     console.warn(snapshot.val());
                     store.dispatch({ type: AuthAction.CHECK_USER_SUCCESS, payload: snapshot.val() })
                 }).then(() => {
                     // alert("yes")
-                    Actions.push('home');
+                    if(authCheck){
+                        Actions.push('home');
+                        authCheck = false;
+                    }
+                    
                 })
             } else if(Actions.currentScene === "loading") {
                 console.log("E;se")
@@ -81,12 +86,12 @@ export default class FirebaseService {
         return database().ref(ref).once("value", (snapshot) => snapshot.val())
     }
     static logoutuser() {
+        authCheck = true;
         return auth().signOut()
     }
 
     static uploadPhoto(uri) {
         if (uri) {
-            console.log(uri, "URIIIII")
             return new Promise((res, rej) => {
                try {
                    let formdata = new FormData();
@@ -99,11 +104,9 @@ export default class FirebaseService {
                    xhr.open('POST', "https://api.cloudinary.com/v1_1/cloud_name/image/upload", true);
            
                    xhr.onload = function () {
-                       console.log(xhr.status, ">>>>>>>>Staus")
                        // do something to response
                        if (xhr.status === 200) {
                            var url = JSON.parse(xhr.responseText);
-                           console.log(url.uri, "Ye mil gya")
                            res(url.url);
                        }
                    }.bind(this);

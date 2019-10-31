@@ -56,11 +56,17 @@ class Login extends Component {
     _focusNextField = (nextField) => {
         this.refs[nextField]._root.focus();
     };
+    
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps && nextProps.isAuth) {
+            Actions.push('home');
+        }
+    };
 
     login = () => {
         const { email, password } = this.state;
         // Actions.home();
-        if (email, password) {
+        if (email && password) {
             // this.setState({loading: true});
             const user = {
                 email: this.state.email.trim(),

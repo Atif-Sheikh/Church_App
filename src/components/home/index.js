@@ -4,12 +4,16 @@ import {
     Container, Header, Title, Content, Button, Icon, Left, Right, Body, Text,
     Item, Input, Label, Form, Tab, Tabs, TabHeading, Fab, Card, CardItem, Spinner, Badge
 } from 'native-base';
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
 import { Drawer } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import Notification from '../notifications';
-import { Sidebar } from '../index';
+import { Sidebar, Loader, CardsItem } from '../index';
+import { connect } from 'react-redux';
 
 import { Styles, screenHeight, fontScale, screenWidth } from "../../config";
+import { AuthAction } from '../../store/actions';
 
 class Home extends Component {
     constructor(props) {
@@ -22,11 +26,34 @@ class Home extends Component {
                 { name: 'Robert Alex', mutualFriends: 6 },
                 { name: 'Calvin Collen', mutualFriends: 2 },
             ],
+            posts: []
         };
     };
 
     static navigationOptions = {
         header: null,
+    };
+
+    componentWillMount() {
+        if (!this.props.posts) {
+            this.props.getPosts();
+        }
+    };
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps && nextProps.posts) {
+            Object.values(nextProps.posts).map((post, ind) => {
+                post.key = Object.keys(nextProps.posts)[ind];
+            });
+            let posts = Object.values(nextProps.posts);
+            posts = posts.sort((a, b) => b.time - a.time);
+            this.setState({
+                posts,
+                isFetching: false,
+                // keys: Object.keys(nextProps.posts),
+            })
+
+        }
     };
 
     closeDrawer = () => {
@@ -68,11 +95,20 @@ class Home extends Component {
     };
 
     componentDidMount() {
-        BackHandler.addEventListener("hardwareBackPress", this._handlePress);
+        BackHandler.addEventListener("hardwareBackPress", this._handlePress)
+        database().ref('.info/connected').on('value', snapshot => {
+            if (snapshot) {
+                database().ref(`/users/${auth().currentUser.uid}`).onDisconnect().update({ online: database.ServerValue.TIMESTAMP });
+                database().ref(`/users/${auth().currentUser.uid}`).update({ online: true });
+            }
+            // else{
+            //     firebase.database().ref(`/users/${firebase.auth().currentUser.uid}`).update({online: false});
+            // }
+        });
     };
     
     _onRefresh() {
-        this.setState({ isFetching: true }, () => {  });
+        this.setState({ isFetching: true }, () => this.props.getPosts());
     };
     
     _onSearch = (val) => {
@@ -80,7 +116,6 @@ class Home extends Component {
     };
 
     render() {
-
         Platform.OS === 'android' && StatusBar.setBarStyle('light-content', true);
         Platform.OS === 'android' && StatusBar.setBackgroundColor("#07AFB8");
 
@@ -124,15 +159,15 @@ class Home extends Component {
                                     <Icon style={styles.tabIcon} name="paper" />
                                     <Text style={styles.tabText}>Status</Text>
                                 </TabHeading>}>
-                                {/* <FlatList
-                                    data={this.state.filteredPost.length ? this.state.filteredPost : this.state.posts}
-                                    renderItem={({ item, index }) => <CardsItem Uid={this.props.user.Uid} pushKey={item.key} item={item} />}
+                                <FlatList
+                                    data={this.state.posts}
+                                    renderItem={({ item, index }) => <CardsItem Uid={this.props.user && this.props.user.Uid || ''} pushKey={item.key} item={item} />}
                                     keyExtractor={(item, key) => key.toString()}
                                     onRefresh={() => this._onRefresh()}
                                     refreshing={this.state.isFetching}
                                     style={{ marginBottom: 20 }}
                                 // ListFooterComponent={this.renderFooter}  
-                                /> */}
+                                />
                                 <Fab
                                     onPress={() => Actions.post()}
                                     active={false}
@@ -140,6 +175,13 @@ class Home extends Component {
                                 >
                                     <Icon name="add" />
                                 </Fab>
+                                
+                                {
+                                    this.props.loader ? <View pointerEvents='none' style={{ justifyContent: 'center', position: 'absolute', width: '100%', height: '100%', alignItems: "center" }}>
+                                        <Loader />
+                                    </View> : null
+                                }
+
                             </Tab>
 
                             <Tab heading={<TabHeading style={{ flexDirection: 'column', backgroundColor: Styles.theme.backgroundColor }}>
@@ -180,4 +222,46 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Home;
+const mapStateToProp = (state) => {
+    console.log(state)
+    return {
+        posts: state.AuthReducer.posts,
+        request: [],
+        user: state.AuthReducer.user,
+        users: state.AuthReducer.users,
+        loader: state.AuthReducer.postsLoader,
+        // lastScene: state.DataReducer.lastScene,
+        // notifications: state.DataReducer.notifications,
+    };
+};
+const mapDispatchToProp = (dispatch) => {
+    return {
+        getPosts: () => {
+            // dispatch(GetPosts())
+            dispatch(AuthAction.getData())
+        },
+        requests: () => {
+            // dispatch(Requests())
+        },
+        // getUsers: () => {
+        //     dispatch(DataAction.getUsers())
+        // },
+        // clearStore: () => {
+        //     dispatch(AuthAction.ClearStore())
+        // },
+        // fetchNotifications: () => {
+        //     dispatch(DataAction.fetchNotifications())
+        // },
+        // getLastScene: (payload) => {
+        //     dispatch(DataAction.getLastScene(payload))
+        // },
+        // fetchDoneTasks: (payload) => {
+        //     dispatch(DataAction.fetchDoneTasks(payload))
+        // },
+        // listenUser: () => {
+        //     dispatch(AuthAction.listUser())
+        // }
+    };
+};
+
+export default connect(mapStateToProp, mapDispatchToProp)(Home);

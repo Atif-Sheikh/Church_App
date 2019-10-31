@@ -21,8 +21,8 @@ class Sidebar extends Component {
     }
     
     logout = () => {
+        Actions.push('login');
         this.props.logout();
-        Actions.login();
     };
     
     navigate = (screen) => {

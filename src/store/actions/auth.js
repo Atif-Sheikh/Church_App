@@ -20,15 +20,17 @@ export default class AuthAction {
     static POST_DATA_SUCCESS = 'POST_DATA_SUCCESS';
     static POST_DATA_FAILED = 'POST_DATA_FAILED';
 
+    static GET_DATA = "GET_DATA";
+    static GET_DATA_SUCCESS = "GET_DATA_SUCCESS";
+    static GET_DATA_FAIL = "GET_DATA_FAIL";
+
     static signin(payload) {
-        console.log(payload);
         return {
             type: AuthAction.SIGNIN,
             payload
         };
     }
     static signup(payload) {
-        console.log(payload, ">>>>>>>>>")
         return {
             type: AuthAction.SIGNUP,
             payload
@@ -52,4 +54,9 @@ export default class AuthAction {
             payload: data
         }
     }
+    static getData() {
+        return {
+            type: AuthAction.GET_DATA,
+        };
+    };
 }

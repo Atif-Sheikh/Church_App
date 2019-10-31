@@ -6,6 +6,7 @@ import Splash from './splash';
 import Loader from './loader';
 import Post from './post';
 import Sidebar from './sidebar';
+import CardsItem from './cardsItem';
 
 export {
     Login,
@@ -15,5 +16,6 @@ export {
     Splash,
     Loader,
     Post,
-    Sidebar
+    Sidebar,
+    CardsItem
 };
