@@ -7,6 +7,7 @@ import {
 import { Drawer } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import Notification from '../notifications';
+import { Sidebar } from '../index';
 
 import { Styles, screenHeight, fontScale, screenWidth } from "../../config";
 
@@ -89,7 +90,7 @@ class Home extends Component {
                     type="displace" //:overlay:static
                     ref={(ref) => { this.drawer = ref; }}
                     panOpenMask={20}
-                    // content={<SideBar user={this.props.user} />}
+                    content={<Sidebar />}
                     onClose={() => this.closeDrawer()} >
                     <Drawer
                         type="displace"

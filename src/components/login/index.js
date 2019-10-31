@@ -29,9 +29,6 @@ class Login extends Component {
         if (this.props.from && this.props.from === "signup") {
             console.log("coming from signup")
         }
-        else {
-            this.props.checkUser();
-        }
         BackHandler.addEventListener("hardwareBackPress", this._handlePress)
     };
 
@@ -58,12 +55,6 @@ class Login extends Component {
 
     _focusNextField = (nextField) => {
         this.refs[nextField]._root.focus();
-    };
-    
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps && nextProps.isAuth) {
-            Actions.home();
-        }
     };
 
     login = () => {

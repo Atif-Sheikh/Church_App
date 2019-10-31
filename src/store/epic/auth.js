@@ -30,6 +30,7 @@ export default class Epic {
                             return Observable.fromPromise(
                                 FirebaseService.getOnceFromDatabase(`/users/${user.uid}`)
                             ).switchMap((data) => {
+                                Actions.home();
                                     // alert(data._value);
                                 console.log(data, "yed khoo")
                                 return Observable.of({
@@ -124,11 +125,10 @@ export default class Epic {
                 ).switchMap(() => {
                     return Observable.fromPromise(
                         FirebaseService.logoutuser()
-                    ).map(() => {
-                        Actions.popAndPush('login');
-                        return {
+                    ).switchMap(() => {
+                        return Observable.of({
                             type: AuthAction.LOGOUT_SUCCESS
-                        }
+                        })
                     })
                 }).catch((err) => {
                     alert(err)
@@ -177,7 +177,7 @@ export default class Epic {
                         }
                     })
                 }).catch((err) => {
-                    alert(error)
+                    alert(err)
 
                 })
             }).catch((error) => {

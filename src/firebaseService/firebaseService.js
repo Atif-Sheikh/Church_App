@@ -88,25 +88,29 @@ export default class FirebaseService {
         if (uri) {
             console.log(uri, "URIIIII")
             return new Promise((res, rej) => {
-               
-                let formdata = new FormData();
-                formdata.append('file', uri);
-                formdata.append('cloud_name', 'atif786');
-                formdata.append('upload_preset', 'e7bxdahf');
-                formdata.append('api_key', '628766992677356');
-        
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', "https://api.cloudinary.com/v1_1/cloud_name/image/upload", true);
-        
-                xhr.onload = function () {
-                    // do something to response
-                    if (xhr.status === 200) {
-                        var url = JSON.parse(xhr.responseText);
-                        console.log(url.uri, "Ye mil gya")
-                        res(url.url);
-                    }
-                }.bind(this);
-                xhr.send(formdata);
+               try {
+                   let formdata = new FormData();
+                   formdata.append('file', uri);
+                   formdata.append('cloud_name', 'atif786');
+                   formdata.append('upload_preset', 'e7bxdahf');
+                   formdata.append('api_key', '628766992677356');
+           
+                   var xhr = new XMLHttpRequest();
+                   xhr.open('POST', "https://api.cloudinary.com/v1_1/cloud_name/image/upload", true);
+           
+                   xhr.onload = function () {
+                       console.log(xhr.status, ">>>>>>>>Staus")
+                       // do something to response
+                       if (xhr.status === 200) {
+                           var url = JSON.parse(xhr.responseText);
+                           console.log(url.uri, "Ye mil gya")
+                           res(url.url);
+                       }
+                   }.bind(this);
+                   xhr.send(formdata);
+               } catch(err) {
+                   console.log(err, "UPLOAD IMAGE ERR")
+               }
     
     
                 // const storage = firebase.storage();

@@ -5,6 +5,7 @@ import Home from './home';
 import Splash from './splash';
 import Loader from './loader';
 import Post from './post';
+import Sidebar from './sidebar';
 
 export {
     Login,
@@ -13,5 +14,6 @@ export {
     Home,
     Splash,
     Loader,
-    Post
+    Post,
+    Sidebar
 };
