@@ -77,7 +77,8 @@ class Post extends Component {
                 coveredContent: "",
                 time: Date.now(),
                 class: "One",
-            })
+            }),
+            this.props.navigation.navigate('home');
         }
     };
 

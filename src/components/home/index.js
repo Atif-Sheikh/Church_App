@@ -78,26 +78,29 @@ class Home extends Component {
     };
 
     _handlePress = () => {
-        if (Actions.currentScene === "home") {
-            Alert.alert(
-                'Exit App',
-                'Exiting the application?',
-                [
-                    { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-                    { text: 'OK', onPress: () => { this._onPressOkay() } },
-                ],
-                { cancelable: true }
-            )
-        } else {
-            Actions.pop();
-        }
-        return true;
+        // if (Actions.currentScene === "home") {
+        //     Alert.alert(
+        //         'Exit App',
+        //         'Exiting the application?',
+        //         [
+        //             { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        //             { text: 'OK', onPress: () => { 
+                        this._onPressOkay() 
+                    // } 
+        //             },
+        //         ],
+        //         { cancelable: true }
+        //     )
+        // } else {
+        //     // Actions.pop();
+        // }
+        // return true;
     };
 
     componentDidMount() {
         BackHandler.addEventListener("hardwareBackPress", this._handlePress)
         database().ref('.info/connected').on('value', snapshot => {
-            if (snapshot) {
+            if (snapshot && this.props.user && this.props.user.Uid) {
                 database().ref(`/users/${auth().currentUser.uid}`).onDisconnect().update({ online: database.ServerValue.TIMESTAMP });
                 database().ref(`/users/${auth().currentUser.uid}`).update({ online: true });
             }
@@ -125,7 +128,7 @@ class Home extends Component {
                     type="displace" //:overlay:static
                     ref={(ref) => { this.drawer = ref; }}
                     panOpenMask={20}
-                    content={<Sidebar />}
+                    content={<Sidebar navigation={this.props.navigation} />}
                     onClose={() => this.closeDrawer()} >
                     <Drawer
                         type="displace"
@@ -161,7 +164,7 @@ class Home extends Component {
                                 </TabHeading>}>
                                 <FlatList
                                     data={this.state.posts}
-                                    renderItem={({ item, index }) => <CardsItem Uid={this.props.user && this.props.user.Uid || ''} pushKey={item.key} item={item} />}
+                                    renderItem={({ item, index }) => <CardsItem Uid={this.props.user ? this.props.user.Uid : ''} pushKey={item.key} item={item} />}
                                     keyExtractor={(item, key) => key.toString()}
                                     onRefresh={() => this._onRefresh()}
                                     refreshing={this.state.isFetching}
@@ -169,7 +172,7 @@ class Home extends Component {
                                 // ListFooterComponent={this.renderFooter}  
                                 />
                                 <Fab
-                                    onPress={() => Actions.post()}
+                                    onPress={() => this.props.navigation.navigate('post')}
                                     active={false}
                                     style={{ backgroundColor: Styles.theme.backgroundColor, position: "absolute", marginBottom: 20 }}
                                 >

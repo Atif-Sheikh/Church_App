@@ -21,8 +21,8 @@ class Signup extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.user) {
-            Actions.home();
+        if (nextProps.isAuth) {
+            this.props.navigation.navigate('home');
         };
     };
     
@@ -94,9 +94,9 @@ class Signup extends Component {
                         </Item>
                         {this.renderFunc()}
                         <TouchableOpacity onPress={() => this.signup()} style={{ alignSelf: "center" }}>
-                            <Text style={{ fontFamily: Styles.fonts.Italic, paddingTop: 5 }}>
+                            <Text onPress={() => this.props.navigation.navigate('login')} style={{ fontFamily: Styles.fonts.Italic, paddingTop: 5 }}>
                                 Already have an account ?
-                        </Text>
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -154,6 +154,7 @@ function mapStateToProp(state) {
         user: state.AuthReducer.user,
         isError: state.AuthReducer.isError,
         loader: state.AuthReducer.signupLoader,
+        isAuth: state.AuthReducer.isAuthenticated,
     });
 };
 function mapDispatchToProp(dispatch) {

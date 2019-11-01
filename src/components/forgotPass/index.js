@@ -29,7 +29,7 @@ export default class ForgotScreen extends Component {
                 <View style={{ height: screenHeight }}>
                     <Header style={{ backgroundColor: Styles.theme.headerBackgroundColor }}>
                         <Left>
-                            <Button onPress={() => Actions.pop()} transparent>
+                            <Button onPress={() => this.props.navigation.goBack(null)} transparent>
                                 <Icon name='arrow-back' />
                             </Button>
                         </Left>

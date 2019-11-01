@@ -1,8 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { AuthAction } from '../actions/index';
 import FirebaseService from '../../firebaseService/firebaseService'
-import { firebase } from '@react-native-firebase/database';
-import { Actions } from 'react-native-router-flux';
+import auth from '@react-native-firebase/auth';
 
 import 'rxjs/operators/map';
 
@@ -81,7 +80,6 @@ export default class Epic {
                             return Observable.fromPromise(
                                 FirebaseService.setOnDatabase(`users/${user.uid}/`, payload)
                             ).switchMap(() => {
-                                Actions.home();
                                 return Observable.of({
                                     type: AuthAction.SIGNUP_SUCCESS,
                                     payload
@@ -112,9 +110,6 @@ export default class Epic {
     static Logout = (action$) => {
         return action$.ofType(AuthAction.LOGOUT)
             .switchMap(() => {
-                return Observable.fromPromise(
-                    FirebaseService.updateOnDatabase(`users/${firebase.auth().currentUser.uid}/`, { online: false })
-                ).switchMap(() => {
                     return Observable.fromPromise(
                         FirebaseService.logoutuser()
                     ).switchMap(() => {
@@ -128,13 +123,6 @@ export default class Epic {
                         type: AuthAction.LOGOUT_FAILED,
                     }
                 })
-            }).catch((err) => {
-                alert(err)
-                return {
-                    type: AuthAction.LOGOUT_FAILED,
-                    // payload: err
-                }
-            })
     };
 
     static CheckUser = (action$) => {

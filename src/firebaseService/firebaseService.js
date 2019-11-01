@@ -33,17 +33,9 @@ export default class FirebaseService {
                     console.warn(snapshot.val());
                     store.dispatch({ type: AuthAction.CHECK_USER_SUCCESS, payload: snapshot.val() })
                 }).then(() => {
-                    // alert("yes")
-                    if(authCheck){
-                        Actions.push('home');
-                        authCheck = false;
-                    }
                     
                 })
-            } else if(Actions.currentScene === "loading") {
-                console.log("E;se")
-                // Actions.popAndPush('login');
-                Actions.push('login')
+            } else {
                 store.dispatch({ type: AuthAction.CHECK_USER_FAILED })
             }
         });

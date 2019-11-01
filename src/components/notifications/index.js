@@ -23,7 +23,7 @@ class Notification extends React.Component {
                 <ScrollView style={{ flex: 1 }}>
                     {
                         data.map(notify => 
-                            <ListItem onPress={() => Actions.home()} style={{ flexDirection: "column", height: screenHeight / 10, width: screenWidth, marginLeft: 0, padding: 10, alignItems: "flex-start" }}>
+                            <ListItem onPress={() => this.props.navigation.navigate('home')} style={{ flexDirection: "column", height: screenHeight / 10, width: screenWidth, marginLeft: 0, padding: 10, alignItems: "flex-start" }}>
                                 <Text style={{ fontFamily: Styles.fonts.Normal, fontSize: Styles.fonts.regular, maxWidth: "90%", color: "#000" }} numberOfLines={1}>{notify.name}</Text>
                                 <View style={{ flexDirection: "row" }}>
                                     <Text style={{ fontFamily: Styles.fonts.Bold, fontSize: Styles.fonts.medium, maxWidth: "90%", color: "gray" }}>Due Date : </Text>

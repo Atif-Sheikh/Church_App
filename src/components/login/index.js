@@ -48,7 +48,7 @@ class Login extends Component {
                 { cancelable: true }
             )
         } else {
-            Actions.pop();
+            // Actions.pop();
         }
         return true;
     };
@@ -59,7 +59,7 @@ class Login extends Component {
     
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps && nextProps.isAuth) {
-            Actions.push('home');
+            this.props.navigation.navigate('home');
         }
     };
 
@@ -129,12 +129,12 @@ class Login extends Component {
                         <View style={styles.btn}>
                             {this.renderFunc()}
                         </View>
-                        <TouchableHighlight onPress={() => Actions.signup()}>
+                        <TouchableHighlight onPress={() => this.props.navigation.navigate('signup')}>
                             <Text style={{ fontSize: Styles.fonts.regular, alignSelf: 'center', paddingVertical: 5, fontFamily: Styles.fonts.Normal }}>
                                 Don't have an Account ?
-                        </Text>
+                            </Text>
                         </TouchableHighlight>
-                        <TouchableHighlight onPress={() => Actions.forgotScreen()}>
+                        <TouchableHighlight onPress={() => this.props.navigation.navigate('forgotScreen')}>
                             <Text style={{ fontSize: Styles.fonts.regular, alignSelf: 'center', paddingVertical: 5, fontFamily: Styles.fonts.Normal }}>
                                 Forgot Password ?
                         </Text>
