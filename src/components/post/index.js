@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Dimensions, Alert, TouchableOpacity, Image, PixelRatio, ScrollView, StatusBar } from 'react-native';
+import { StyleSheet, View, Dimensions, Alert, TouchableOpacity, Image, Keyboard, ScrollView, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 import {
     Container, Header, Icon, Button, Left, Body, Content, Title,
     Form, Item, Input, Label, Picker, Text, Textarea, Thumbnail
@@ -76,7 +75,6 @@ class Post extends Component {
                 postType: "",
                 coveredContent: "",
                 time: Date.now(),
-                class: "One",
             }),
             this.props.navigation.navigate('home');
         }
@@ -89,6 +87,7 @@ class Post extends Component {
     saveData = () => {
         const { title, coveredContent } = this.state;
         if (title && coveredContent) {
+            Keyboard.dismiss();            
             this.props.SaveData(this.state);
         } else {
             Alert.alert(null, 'Please fill form correctly!');
@@ -111,7 +110,7 @@ class Post extends Component {
                                     <Icon name="ios-camera" style={{ fontSize: fontScale * 100, color: Styles.theme.textColor }} />
                                     :
 
-                                    <Thumbnail style={{ height: "100%", width: "100%", borderRadius: 75 }} source={{ uri: this.state.photo }} resizeMode="cover" />
+                                    <Thumbnail style={{ height: "100%", width: "100%", borderRadius: 100 }} source={{ uri: this.state.photo }} resizeMode="cover" />
                                 }
                             </View>
                         </TouchableOpacity>
@@ -145,8 +144,8 @@ function mapStateToProp(state) {
     console.log(state.AuthReducer, "YEhhhhh")
     return ({
         user: state.AuthReducer.user,
-        loader: false,
-        success: false
+        loader: state.AuthReducer.PostDataLoader,
+        success: state.AuthReducer.postSuccess
     });
 };
 function mapDispatchToProp(dispatch) {

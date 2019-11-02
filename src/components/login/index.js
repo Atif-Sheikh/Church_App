@@ -25,34 +25,6 @@ class Login extends Component {
         header: null
     };
 
-    UNSAFE_componentWillMount() {
-        if (this.props.from && this.props.from === "signup") {
-            console.log("coming from signup")
-        }
-        BackHandler.addEventListener("hardwareBackPress", this._handlePress)
-    };
-
-    _onPressOkay = () => {
-        BackHandler.exitApp();
-    };
-
-    _handlePress = () => {
-        if (Actions.currentScene === "login") {
-            Alert.alert(
-                'Exit App',
-                'Exiting the application?',
-                [
-                    { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-                    { text: 'OK', onPress: () => { this._onPressOkay() } },
-                ],
-                { cancelable: true }
-            )
-        } else {
-            // Actions.pop();
-        }
-        return true;
-    };
-
     _focusNextField = (nextField) => {
         this.refs[nextField]._root.focus();
     };

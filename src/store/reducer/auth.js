@@ -14,13 +14,18 @@ const INITIAL_STATE = {
     signInLoading: null,
     signupLoader: null,
     loader: false,
-    checkUserLoader: null,
+    checkUserLoader: true,
     checkUser: null,
 
 
     postsLoader: false,
     posts: null,
-    error: null
+    error: null,
+
+
+    postSuccess: null,
+    PostDataLoader: null,
+    postDataErr: null,
 };
 export default function AuthReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
@@ -51,9 +56,9 @@ export default function AuthReducer(state = INITIAL_STATE, action) {
             return Object.assign({}, state, { isError: true, signupLoader: false })
 
         case AuthAction.LOGOUT:
-            return Object.assign({}, state, { loader: true, user: null })
+            return Object.assign({}, state, { loader: true, user: null, logout: false })
         case AuthAction.LOGOUT_SUCCESS:
-            return Object.assign({}, state, { loader: false, logout: null, user: null });
+            return Object.assign({}, state, { loader: false, logout: true, user: null });
         case AuthAction.LOGOUT_FAILED:
             return Object.assign({}, state, { logout: false, loader: false });
 
@@ -65,6 +70,14 @@ export default function AuthReducer(state = INITIAL_STATE, action) {
             return Object.assign({}, state, { posts: action.payload, postsLoader: false });
         case AuthAction.GET_DATA_FAIL:
             return Object.assign({}, state, { error: action.payload, postsLoader: false });
+
+        
+        case AuthAction.POST_DATA: 
+            return Object.assign({}, state, { postSuccess: null, PostDataLoader: true, postDataErr: null });
+        case AuthAction.POST_DATA_SUCCESS: 
+            return Object.assign({}, state, { postSuccess: true, PostDataLoader: false, postDataErr: null });
+        case AuthAction.POST_DATA_FAIL: 
+            return Object.assign({}, state, { postSuccess: false, PostDataLoader: false, postDataErr: action.payload });
 
         default:
             return state;

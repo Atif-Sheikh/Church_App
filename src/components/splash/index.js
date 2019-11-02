@@ -14,13 +14,16 @@ class Splash extends React.Component {
 
     componentDidMount() {
         setTimeout(() => {
-            this.props.navigation.navigate('home');
+            this.props.checkUser();
         }, 1500);
     };
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps && nextProps.isAuth) {
             this.props.navigation.navigate('home');
+        }
+        if(nextProps && !nextProps.isAuth && !nextProps.checkLoader) {
+            this.props.navigation.navigate('login');
         }
     };
     

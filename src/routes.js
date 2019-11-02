@@ -23,7 +23,7 @@ const AppNavigator = createStackNavigator(
         home: Home,
     },
     {
-        initialRouteName: 'home',
+        initialRouteName: 'loading',
     }
 );
   

@@ -18,10 +18,15 @@ class Sidebar extends Component {
                 { name: "QR Code", iconName: "people", onPress: "Actions.QrGenerate()" }
             ]
         }
-    }
+    };
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps && nextProps.logoutState) {
+            this.props.navigation.navigate('login');
+        }
+    };
     
     logout = () => {
-        this.props.navigation.navigate('login');
         this.props.logout();
     };
     
@@ -76,7 +81,7 @@ class Sidebar extends Component {
 };
 function mapStateToProp(state) {
     return {
-        logout: state.AuthReducer.logout,
+        logoutState: state.AuthReducer.logout,
         user: state.AuthReducer.user,
         loader: state.AuthReducer.loader
     }

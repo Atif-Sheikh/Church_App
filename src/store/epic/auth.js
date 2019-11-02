@@ -84,7 +84,19 @@ export default class Epic {
                                     type: AuthAction.SIGNUP_SUCCESS,
                                     payload
                                 })
+                            }).catch(err => {
+                                alert(err)
+                                return Observable.of({
+                                    type: AuthAction.SIGNUP_FAIL,
+                                    payload: err
+                                })        
                             })
+                        }).catch(err => {
+                            alert(err)
+                            return Observable.of({
+                                type: AuthAction.SIGNUP_FAIL,
+                                payload: err
+                            })        
                         })
                     })
                     // console.log(user)
@@ -110,19 +122,19 @@ export default class Epic {
     static Logout = (action$) => {
         return action$.ofType(AuthAction.LOGOUT)
             .switchMap(() => {
-                    return Observable.fromPromise(
-                        FirebaseService.logoutuser()
-                    ).switchMap(() => {
-                        return Observable.of({
-                            type: AuthAction.LOGOUT_SUCCESS
-                        })
+                return Observable.fromPromise(
+                    FirebaseService.logoutuser()
+                ).switchMap(() => {
+                    return Observable.of({
+                        type: AuthAction.LOGOUT_SUCCESS
                     })
-                }).catch((err) => {
-                    alert(err)
-                    return {
-                        type: AuthAction.LOGOUT_FAILED,
-                    }
                 })
+            }).catch((err) => {
+                alert(err)
+                return Observable.of({
+                    type: AuthAction.LOGOUT_FAILED,
+                })
+            })
     };
 
     static CheckUser = (action$) => {
@@ -134,9 +146,9 @@ export default class Epic {
                 })
             }).catch((err) => {
                 alert(err);
-                return {
+                return Observable.of({
                     type: AuthAction.CHECK_USER_FAILED,
-                }
+                })
             })
     };
 
@@ -149,11 +161,10 @@ export default class Epic {
                     payload['photo'] = uri;
                     return Observable.fromPromise(
                         FirebaseService.pushOnDatabase(`status`, payload)
-                    ).map(() => {
-                        Alert.alert(null, 'SuccessFully Posted', [{ text: 'OK', onPress: () => console.log("closed") }]);
-                        return {
+                    ).switchMap(() => {
+                        return Observable.of({
                             type: AuthAction.POST_DATA_SUCCESS
-                        }
+                        })
                     })
                 }).catch((err) => {
                     alert(err)

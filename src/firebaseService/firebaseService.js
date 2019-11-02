@@ -14,7 +14,6 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/fromPromise';
 
 
-var authCheck = true;
 export default class FirebaseService {
 
     static getToken(){
@@ -30,7 +29,7 @@ export default class FirebaseService {
             console.log(user, "ye dekhhhhhhhhhhhhhhhhhhhhhhhhh")
             if(user){
                 database().ref(`/users/${user.uid}`).once('value', snapshot => {
-                    console.warn(snapshot.val());
+                    console.log(snapshot.val(), "YEEEEEEEEEEEeeees");
                     store.dispatch({ type: AuthAction.CHECK_USER_SUCCESS, payload: snapshot.val() })
                 }).then(() => {
                     
@@ -78,7 +77,6 @@ export default class FirebaseService {
         return database().ref(ref).once("value", (snapshot) => snapshot.val())
     }
     static logoutuser() {
-        authCheck = true;
         return auth().signOut()
     }
 

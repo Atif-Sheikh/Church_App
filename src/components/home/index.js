@@ -35,9 +35,7 @@ class Home extends Component {
     };
 
     componentWillMount() {
-        if (!this.props.posts) {
-            this.props.getPosts();
-        }
+        this.props.getPosts();
     };
 
     componentWillReceiveProps(nextProps) {
@@ -121,7 +119,7 @@ class Home extends Component {
     render() {
         Platform.OS === 'android' && StatusBar.setBarStyle('light-content', true);
         Platform.OS === 'android' && StatusBar.setBackgroundColor("#07AFB8");
-
+        console.log(this.props.user, ">>YE EDKHoo")
         return (
             <View style={{ height: screenHeight }}>
                 <Drawer
