@@ -56,7 +56,7 @@ export default function AuthReducer(state = INITIAL_STATE, action) {
             return Object.assign({}, state, { isError: true, signupLoader: false })
 
         case AuthAction.LOGOUT:
-            return Object.assign({}, state, { loader: true, user: null, logout: false })
+            return Object.assign({}, state, { loader: true, logout: false })
         case AuthAction.LOGOUT_SUCCESS:
             return Object.assign({}, state, { loader: false, logout: true, user: null });
         case AuthAction.LOGOUT_FAILED:
