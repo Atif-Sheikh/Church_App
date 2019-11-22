@@ -107,6 +107,10 @@ class Home extends Component {
             // }
         });
     };
+
+    componentWillUnmount(){
+        BackHandler.removeEventListener("hardwareBackPress", this._handlePress)
+    };
     
     _onRefresh() {
         this.setState({ isFetching: true }, () => this.props.getPosts());
@@ -162,7 +166,7 @@ class Home extends Component {
                                 </TabHeading>}>
                                 <FlatList
                                     data={this.state.posts}
-                                    renderItem={({ item, index }) => <CardsItem Uid={this.props.user ? this.props.user.Uid : ''} pushKey={item.key} item={item} />}
+                                    renderItem={({ item, index }) => <CardsItem navigation={this.props.navigation} Uid={this.props.user ? this.props.user.Uid : ''} pushKey={item.key} item={item} />}
                                     keyExtractor={(item, key) => key.toString()}
                                     onRefresh={() => this._onRefresh()}
                                     refreshing={this.state.isFetching}
