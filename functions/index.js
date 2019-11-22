@@ -58,29 +58,3 @@ exports.chatNotification = functions.https.onRequest((req, res) => {
         }
 });
 
-exports.parentSignup = functions.https.onRequest((req,res)=>{
-    var req=req.body
-    console.log("requesting function")
-    if(req){
-        return admin.auth().createUser({
-            email:req.email,
-            password:req.password,
-            displayName:req.username
-        }).then((response)=>{
-            let obj={
-                Uid:response.uid,
-                accountType:req.accountType,
-                email:req.email,
-                number:req.number,
-                userName:req.username
-            }
-            return admin.database().ref(`users/${response.uid}`).set(obj).then(()=>{
-                res.send({success:true})
-            }).catch(error=>{
-                res.send({success:false,errorMessage:error.message})
-            })
-        }).catch((error)=>{
-            res.send({success:false,errorMessage:error.message})
-        })
-    }
-})
