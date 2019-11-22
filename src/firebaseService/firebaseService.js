@@ -20,8 +20,8 @@ export default class FirebaseService {
         return messaging().getToken()
     }
     static listenUserData(){
-        database().ref(`/users/${auth().currentUser.uid}`).on("value",(snap)=>{
-            store.dispatch({type:AuthAction.NEW_USER_DATA,payload:snap.val()})
+        database().ref(`/users`).on("value",(snap)=>{
+            store.dispatch({ type:AuthAction.NEW_USER_DATA, payload:snap.val() });
         })
     }
     static getUser(){
