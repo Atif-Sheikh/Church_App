@@ -26,6 +26,10 @@ const INITIAL_STATE = {
     postSuccess: null,
     PostDataLoader: null,
     postDataErr: null,
+
+    users: null,
+
+    chat: null
 };
 export default function AuthReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
@@ -78,7 +82,12 @@ export default function AuthReducer(state = INITIAL_STATE, action) {
             return Object.assign({}, state, { postSuccess: true, PostDataLoader: false, postDataErr: null });
         case AuthAction.POST_DATA_FAIL: 
             return Object.assign({}, state, { postSuccess: false, PostDataLoader: false, postDataErr: action.payload });
-
+        
+        case AuthAction.NEW_USER_DATA:
+            return Object.assign({}, state, { users: { ...action.payload } })
+        case AuthAction.SEND_MESSAGE_SUCCESS:
+            return Object.assign({}, state, { chat: action.payload })
+            
         default:
             return state;
     }

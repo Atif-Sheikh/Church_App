@@ -7,7 +7,8 @@ import {
     ForgotPass,
     Home,
     Splash,
-    Post
+    Post,
+    ChatRoom
 } from "./components";
 
 
@@ -21,6 +22,7 @@ const AppNavigator = createStackNavigator(
         forgotScreen: ForgotPass,
         post: Post,
         home: Home,
+        chatRoom: ChatRoom
     },
     {
         initialRouteName: 'loading',

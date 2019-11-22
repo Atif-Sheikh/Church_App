@@ -7,9 +7,8 @@ import {
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { Drawer } from 'native-base';
-import { Actions } from 'react-native-router-flux';
 import Notification from '../notifications';
-import { Sidebar, Loader, CardsItem } from '../index';
+import { Sidebar, Loader, CardsItem, LeftDrawerContent } from '../index';
 import { connect } from 'react-redux';
 
 import { Styles, screenHeight, fontScale, screenWidth } from "../../config";
@@ -28,6 +27,7 @@ class Home extends Component {
             ],
             posts: []
         };
+        props.listenUser();
     };
 
     static navigationOptions = {
@@ -132,7 +132,7 @@ class Home extends Component {
                         type="displace"
                         side='right'
                         ref={(ref) => { this.LeftDrawer = ref; }}
-                        // content={<LeftDrawerContent />}
+                        content={<LeftDrawerContent navigation={this.props.navigation} />}
                         onClose={() => this.closeLeftDrawer()} >
                         <Header style={{ display: 'flex', backgroundColor: Styles.theme.headerBackgroundColor, flexDirection: 'row', alignItems: "center" }} hasTabs>
                             <View style={{ flex: 1 }}>
@@ -259,9 +259,9 @@ const mapDispatchToProp = (dispatch) => {
         // fetchDoneTasks: (payload) => {
         //     dispatch(DataAction.fetchDoneTasks(payload))
         // },
-        // listenUser: () => {
-        //     dispatch(AuthAction.listUser())
-        // }
+        listenUser: () => {
+            dispatch(AuthAction.listUser())
+        }
     };
 };
 

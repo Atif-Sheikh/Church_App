@@ -14,7 +14,9 @@ const rootEpic = combineEpics(
     AuthEpic.Logout,
     AuthEpic.CheckUser,
     AuthEpic.PostData,
-    AuthEpic.GetPosts
+    AuthEpic.GetPosts,
+    AuthEpic.ListenUserData,
+    AuthEpic.SendMessage
 );
 
 const rootReducer = combineReducers({

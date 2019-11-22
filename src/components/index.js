@@ -7,6 +7,9 @@ import Loader from './loader';
 import Post from './post';
 import Sidebar from './sidebar';
 import CardsItem from './cardsItem';
+import LeftDrawerContent from './leftDrawerContent';
+import ChatCard from './chatCard';
+import ChatRoom from './chatRoom';
 
 export {
     Login,
@@ -17,5 +20,8 @@ export {
     Loader,
     Post,
     Sidebar,
-    CardsItem
+    CardsItem,
+    LeftDrawerContent,
+    ChatCard,
+    ChatRoom
 };

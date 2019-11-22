@@ -24,6 +24,14 @@ export default class AuthAction {
     static GET_DATA_SUCCESS = "GET_DATA_SUCCESS";
     static GET_DATA_FAIL = "GET_DATA_FAIL";
 
+    static LISTEN_USER_DATA = "LISTEN_USER_DATA";
+
+    static NEW_USER_DATA = "NEW_USER_DATA";
+
+    static SEND_MESSAGE = 'SEND_MESSAGE';
+    static SEND_MESSAGE_SUCCESS = 'SEND_MESSAGE_SUCCESS';
+    static SEND_MESSAGE_FAILED = 'SEND_MESSAGE_FAILED';
+
     static signin(payload) {
         return {
             type: AuthAction.SIGNIN,
@@ -58,5 +66,16 @@ export default class AuthAction {
         return {
             type: AuthAction.GET_DATA,
         };
+    };
+    static listUser(){
+        return{
+            type: AuthAction.LISTEN_USER_DATA
+        }
+    }
+    static SendMessage(payload) {
+        return {
+            type: AuthAction.SEND_MESSAGE,
+            payload
+        }
     };
 }

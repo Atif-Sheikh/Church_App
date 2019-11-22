@@ -206,5 +206,41 @@ export default class Epic {
 
     }
 
+    static ListenUserData = (action$) => {
+        return action$.ofType(AuthAction.LISTEN_USER_DATA)
+            .switchMap(() => {
+                FirebaseService.listenUserData();
+                return Observable.of({
+                    type: ""
+                })
+            }).catch((err) => {
+                alert(err);
+                return {
+                    type: "",
+                }
+            })
+    };
+
+    static SendMessage = (action$) => {
+        return action$.ofType(AuthAction.SEND_MESSAGE)
+            .switchMap(({ payload }) => {
+                let path = payload.path;
+                delete payload['path'];
+                return Observable.fromPromise(
+                    FirebaseService.pushOnDatabase(`chatMessages/${path}`, payload)
+                ).switchMap(() => {
+                    return Observable.of({
+                        type: AuthAction.SEND_MESSAGE_SUCCESS,
+                        payload
+                    })
+                })
+            }).catch((err) => {
+                alert(err);
+                return {
+                    type: AuthAction.SEND_MESSAGE_FAILED,
+                }
+            })
+    };
+
 
 };
