@@ -10,6 +10,7 @@ import CardsItem from './cardsItem';
 import LeftDrawerContent from './leftDrawerContent';
 import ChatCard from './chatCard';
 import ChatRoom from './chatRoom';
+import Comments from './comments';
 
 export {
     Login,
@@ -23,5 +24,6 @@ export {
     CardsItem,
     LeftDrawerContent,
     ChatCard,
-    ChatRoom
+    ChatRoom,
+    Comments
 };

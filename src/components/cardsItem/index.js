@@ -117,6 +117,7 @@ export default class CardsItem extends Component {
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => {
                                         this.setState({ modalVisible: false }, () => {
+                                            this.props.navigation.navigate('comments', { pushKey: this.props.pushKey, comments: comments });
                                             // Actions.message({ pushKey: this.props.pushKey, comments: comments })
                                         })
                                     }}
@@ -170,7 +171,7 @@ export default class CardsItem extends Component {
                         <Icon name="thumbs-up" style={{ fontSize: Styles.fonts.h1, color: this.state.like ? "blue" : Styles.theme.normalColor, }} />
                         <Text style={{ color: this.state.like ? "blue" : Styles.theme.normalColor, fontFamily: Styles.fonts.Bold, fontSize: Styles.fonts.h3, paddingLeft: 10 }}>Like</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.actionDiv} onPress={() => {}}>
+                    <TouchableOpacity style={styles.actionDiv} onPress={() => this.props.navigation.navigate('comments', { pushKey: this.props.pushKey, comments: comments })}>
                         {/* <Badge danger style={{ top: 4 }}>
               <Text>{comments}</Text>
             </Badge> */}

@@ -8,7 +8,8 @@ import {
     Home,
     Splash,
     Post,
-    ChatRoom
+    ChatRoom,
+    Comments
 } from "./components";
 
 
@@ -22,7 +23,8 @@ const AppNavigator = createStackNavigator(
         forgotScreen: ForgotPass,
         post: Post,
         home: Home,
-        chatRoom: ChatRoom
+        chatRoom: ChatRoom,
+        comments: Comments
     },
     {
         initialRouteName: 'loading',
