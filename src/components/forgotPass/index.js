@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, Platform, Dimensions, StyleSheet, Alert, 
 import { Header, Left, Body, Icon, Title, Input, Item, Button } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import LinearGradient from 'react-native-linear-gradient';
+import auth from '@react-native-firebase/auth';
+
 import { screenHeight, screenWidth, Styles } from "../../config";
 
 export default class ForgotScreen extends Component {
@@ -18,7 +20,18 @@ export default class ForgotScreen extends Component {
     };
 
     _onPress = () => {
-        Alert.alert(null, 'Please Enter email')
+        let email = this.state.email.trim();
+        if (email) {
+            Keyboard.dismiss();
+            auth().sendPasswordResetEmail(email).then(() => {
+                Alert.alert(null, 'Please Check Your Email', [{ text: 'OK', onPress: () => this.props.navigation.navigate('login') }])
+            })
+                .catch((err) => {
+                    alert(err);
+                })
+        } else {
+            Alert.alert(null, 'Please Enter email')
+        }
     };
     render() {
         Platform.OS === 'android' && StatusBar.setBarStyle('light-content', true);
