@@ -20,7 +20,7 @@ class Sidebar extends Component {
             let data = props.users;
             let onlineUsers = [];
             for (let key in data) {
-                if (props.user.email !== data[key]['email']) {
+                if (props.user && props.user.email !== data[key]['email']) {
                     if (data[key]) {
                         onlineUsers.push(data[key]);
                     }
